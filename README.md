@@ -24,7 +24,6 @@ El diseño y los estilos de la aplicación se desarrollaron utilizando:
 
 - 🌬️ **[Tailwind CSS](https://tailwindcss.com/)**
 
-
 ---
 
 ## 🌐 API utilizada
