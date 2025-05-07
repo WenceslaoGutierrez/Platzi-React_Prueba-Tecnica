@@ -34,8 +34,8 @@ export type ShoppingCartContextType = {
     setOrder: (order: Order[]) => void;
     items: Product[] | null;
     setItems: (items: Product[]) => void;
-    filteredItems: Product[] | null;
-    setFilteredItems: (items: Product[] | null) => void;
+    filteredItems: Product[];
+    setFilteredItems: (items: Product[]) => void;
     searchByTitle: string | null;
     setSearchByTitle: (title: string | null) => void;
     searchByCategory: string | null;

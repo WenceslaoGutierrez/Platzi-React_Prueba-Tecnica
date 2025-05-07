@@ -29,7 +29,7 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
 
   // Store · All items and filtered items
   const [items, setItems] = useState<Product[] | null>(null);
-  const [filteredItems, setFilteredItems] = useState<Product[] | null>(null);
+  const [filteredItems, setFilteredItems] = useState<Product[]>([]);
 
   // Store · Search filters
   const [searchByTitle, setSearchByTitle] = useState<string | null>(null);
@@ -49,48 +49,53 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
       .catch((err) => console.error('🔴 Error fetching products:', err));
   }, []);
 
-  // Filtering logic by title and category
+  const filteredItemsByTitle = (items: Product[], title: string): Product[] => {
+    return items.filter(item =>
+      item.title.toLowerCase().includes(title.toLowerCase())
+    );
+  };
+  
+  const filteredItemsByCategory = (items: Product[], category: string): Product[] => {
+    return items.filter(item =>
+      item.category.toLowerCase().includes(category.toLowerCase())
+    );
+  };
+  
   const filterBy = (
     searchType: string | null,
     items: Product[] | null,
     searchByTitle: string | null,
     searchByCategory: string | null
-  ): Product[] | null => {
-    if (!items) return null;
-
+  ): Product[] => {
+    if (!items) return [];
+  
     if (searchType === 'BY_TITLE') {
-      return items.filter((item) =>
-        item.title.toLowerCase().includes((searchByTitle || '').toLowerCase())
-      );
+      return filteredItemsByTitle(items, searchByTitle!);
     }
-
+  
     if (searchType === 'BY_CATEGORY') {
-      return items.filter((item) =>
-        item.category.toLowerCase().includes((searchByCategory || '').toLowerCase())
+      return filteredItemsByCategory(items, searchByCategory!);
+    }
+  
+    if (searchType === 'BY_TITLE_AND_CATEGORY') {
+      return filteredItemsByCategory(
+        filteredItemsByTitle(items, searchByTitle!),
+        searchByCategory!
       );
     }
-
-    if (searchType === 'BY_TITLE_AND_CATEGORY') {
-      return items
-        .filter((item) =>
-          item.category.toLowerCase().includes((searchByCategory || '').toLowerCase())
-        )
-        .filter((item) =>
-          item.title.toLowerCase().includes((searchByTitle || '').toLowerCase())
-        );
-    }
-
+  
     return items;
   };
-
-  // Effect · Reactively filter items
+  
+  // --- Reactive filtering effect ---
+  
   useEffect(() => {
     let searchType: string | null = null;
-
+  
     if (searchByTitle && searchByCategory) searchType = 'BY_TITLE_AND_CATEGORY';
     else if (searchByTitle) searchType = 'BY_TITLE';
     else if (searchByCategory) searchType = 'BY_CATEGORY';
-
+  
     const result = filterBy(searchType, items, searchByTitle, searchByCategory);
     setFilteredItems(result);
     console.log('🔍 Filtered items:', result);
