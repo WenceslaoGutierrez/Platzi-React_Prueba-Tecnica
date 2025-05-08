@@ -18,6 +18,10 @@ export type Order = {
 
 // ShoppingCart Context
 export type ShoppingCartContextType = {
+    account: Record<string, unknown>;
+    setAccount: (data: Record<string, unknown>) => void;
+    signOut: boolean;
+    setSignOut: (value: boolean) => void;
     count: number;
     setCount: (count: number) => void;
     isProductDetailOpen: boolean;

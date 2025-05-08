@@ -4,7 +4,47 @@ import type { Product, Order, ShoppingCartContextType } from '../Types/index';
 
 export const ShoppingCartContext = createContext({} as ShoppingCartContextType);
 
+export const initializeLocalStorage = (): { account: Record<string, unknown>; signOut: boolean } => {
+  const accountInLocalStorage = localStorage.getItem('account');
+  const signOutInLocalStorage = localStorage.getItem('sign-out');
+
+  let parsedAccount: Record<string, unknown>;
+  let parsedSignout: boolean;
+
+  if (!accountInLocalStorage) {
+    localStorage.setItem('account', JSON.stringify({}));
+    parsedAccount = {};
+  } else {
+    try {
+      parsedAccount = JSON.parse(accountInLocalStorage);
+    } catch {
+      parsedAccount = {};
+    }
+  }
+
+  if (!signOutInLocalStorage) {
+    localStorage.setItem('sign-out', JSON.stringify(false));
+    parsedSignout = false;
+  } else {
+    try {
+      parsedSignout = JSON.parse(signOutInLocalStorage);
+    } catch {
+      parsedSignout = false;
+    }
+  }
+
+  return { account: parsedAccount, signOut: parsedSignout };
+};
+
 export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
+
+  //Initial values from Local Storage
+  const { account: initialAccount, signOut: initialSignOut } = initializeLocalStorage();
+
+  // Auth · Account & SignOut
+  const [account, setAccount] = useState<Record<string, unknown>>(initialAccount);
+  const [signOut, setSignOut] = useState<boolean>(initialSignOut);
+
   // Shopping Cart · Item count
   const [count, setCount] = useState(0);
 
@@ -104,6 +144,10 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ShoppingCartContext.Provider
       value={{
+        account,
+        setAccount,
+        signOut,
+        setSignOut,
         count,
         setCount,
         isProductDetailOpen,
