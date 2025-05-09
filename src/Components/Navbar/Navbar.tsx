@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, type ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { ShoppingCartContext } from "../../Context/ShoppingCartContext";
@@ -7,10 +7,61 @@ const Navbar = () => {
   const context = useContext(ShoppingCartContext);
   const activeStyle = "underline underline-offset-4";
 
+  // Sign Out
+  const signOut = localStorage.getItem('sign-out');
+  const parsedSignOut = signOut ? JSON.parse(signOut) as boolean : false;
+  const isUserSignOut = context.signOut || parsedSignOut;
+
   const handleSignOut = (): void =>{
-    localStorage.setItem('sign-out', JSON.stringify (true));
+    const stringifiedSignOut = JSON.stringify(true);
+    localStorage.setItem('sign-out', stringifiedSignOut);
     context.setSignOut(true);
   }
+
+  const renderView = (): ReactNode =>{
+    if (isUserSignOut) {
+      return (
+        <li>
+          <NavLink
+            to="/sign-in"
+            className={({ isActive }) => isActive ? activeStyle : undefined }
+            onClick={handleSignOut}>
+            Sign in
+          </NavLink>
+        </li>
+      );
+    } else {
+      return (
+        <>
+          <li className='text-black/60'>
+          wences@example.com
+          </li>
+          <li>
+            <NavLink
+              to='/my-orders'
+              className={({ isActive }) => isActive ? activeStyle : undefined}>
+              My Orders
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to='/my-account'
+              className={({ isActive }) => isActive ? activeStyle : undefined}>
+              My Account
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to='/sign-in'
+              className={({ isActive }) => isActive ? activeStyle : undefined}
+              onClick={handleSignOut}>
+              Sign out
+            </NavLink>
+          </li>
+        </>
+      );
+    }
+  };
 
   return (
     <nav className="flex justify-between items-center fixed z-10 top-0 w-full py-5 px-8 text-sm font-light bg-white">
@@ -77,32 +128,7 @@ const Navbar = () => {
         </li>
       </ul>
       <ul className="flex items-center gap-3">
-        <li className="text-black/60">wences@example.com</li>
-        <li>
-          <NavLink
-            to="/my-orders"
-            className={({ isActive }) => (isActive ? activeStyle : undefined)}
-          >
-            My Orders
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/my-account"
-            className={({ isActive }) => (isActive ? activeStyle : undefined)}
-          >
-            My Account
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/sign-in"
-            className={({ isActive }) => (isActive ? activeStyle : undefined)}
-            onClick={handleSignOut}
-            >
-            Sign In
-          </NavLink>
-        </li>
+        {renderView()}
         <li className="flex items-center">
           <ShoppingBagIcon className="h-6 w-6 text-black" />
           <span>{context.count}</span>
