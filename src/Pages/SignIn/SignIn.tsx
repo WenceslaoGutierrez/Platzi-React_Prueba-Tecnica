@@ -2,16 +2,18 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout";
 import { useContext, useRef, useState, type ReactNode } from "react";
 import { ShoppingCartContext } from "../../Context/ShoppingCartContext";
-import { getParsedStorageObject, userHasAccountFrom } from "../../utils";
+import { getParsedStorageObject, getValidAccount, userHasAccountFrom } from "../../utils";
+import type { Account } from "../../Types";
+import AccountForm from "../../Components/AccountForm/AccountForm";
 
 function SignIn() {
   const context = useContext(ShoppingCartContext);
   const [view, setView] = useState("user-info");
-  const form = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
 
   // Account
   const parsedAccount = getParsedStorageObject('account');
+  const validAccount = getValidAccount(parsedAccount);
   const userHasAccount = userHasAccountFrom(parsedAccount, context.account);
 
 
@@ -22,15 +24,7 @@ function SignIn() {
     navigate("/");
   };
 
-  const createAccount = (): void => {
-    if (!form.current) return;
-    const formData = new FormData(form.current);
-    const data = {
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
-    };
-
+  const createAccount = (data: Account): void => {
     localStorage.setItem("account", JSON.stringify(data));
     context.setAccount(data);
     handleSignIn();
@@ -85,82 +79,13 @@ function SignIn() {
     );
   };
 
-  const renderCreateUserInfo = (): ReactNode => {
-    return (
-      <form ref={form} className="flex flex-col gap-4 w-80">
-        <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="font-light text-sm">
-            Your name:
-          </label>
-          <input
-            required
-            type="text"
-            id="name"
-            name="name"
-            defaultValue={
-              typeof parsedAccount.name === "string" &&
-              parsedAccount.name.trim() !== ""
-                ? parsedAccount.name
-                : ""
-            }
-            placeholder="John Doe"
-            className="rounded-lg border border-black placeholder:font-light placeholder:text-sm placeholder:text-black/60 focus:outline-none py-2 px-4"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label htmlFor="email" className="font-light text-sm">
-            Your email:
-          </label>
-          <input
-            required
-            type="email"
-            id="email"
-            name="email"
-            defaultValue={
-              typeof parsedAccount.email === "string" &&
-              parsedAccount.email.trim() !== ""
-                ? parsedAccount.email
-                : ""
-            }
-            placeholder="exaple@email.com"
-            className="rounded-lg border border-black placeholder:font-light placeholder:text-sm placeholder:text-black/60 focus:outline-none py-2 px-4"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label htmlFor="password" className="font-light text-sm">
-            Your password:
-          </label>
-          <input
-            required
-            type="password"
-            id="password"
-            name="password"
-            defaultValue={
-              typeof parsedAccount.password === "string" &&
-              parsedAccount.password.trim() !== ""
-                ? parsedAccount.password
-                : ""
-            }
-            placeholder="********"
-            className="rounded-lg border border-black placeholder:font-light placeholder:text-sm placeholder:text-black/60 focus:outline-none py-2 px-4"
-          />
-        </div>
-        <Link to={"/"}>
-          <button
-            className="bg-black text-white w-full rounded-lg py-3"
-            onClick={(e) => {
-              e.preventDefault();
-              if (form.current?.reportValidity()) {
-                createAccount();
-              }
-            }}
-          >
-            Create
-          </button>
-        </Link>
-      </form>
-    );
-  };
+  const renderCreateUserInfo = () => (
+    <AccountForm
+      buttonLabel="Create"
+      initialData={validAccount ?? undefined}
+      onSubmit={createAccount}
+    />
+  );
 
   const renderView = () =>
     view === "create-user-info" ? renderCreateUserInfo() : renderLogin();

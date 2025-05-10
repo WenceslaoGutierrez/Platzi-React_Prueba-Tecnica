@@ -1,3 +1,5 @@
+import type { Account } from "../Types";
+
 /**
  * This function calculates total price of a new order
  * @param products - Array of products with a price
@@ -5,7 +7,7 @@
  */
 export const totalPrice = (products: { price: number }[]): number => {
     return products.reduce((acc, product) => acc + product.price, 0);
-  };
+};
 
 export const getParsedStorageObject = (key: string): Record<string, unknown> => {
   const raw = localStorage.getItem(key);
@@ -35,3 +37,19 @@ export const userHasAccountFrom = (
 ): boolean => {
   return !isEmptyObject(local) || !isEmptyObject(context);
 };
+
+export function getValidAccount(data: unknown): Account | null {
+  if (
+    typeof data === "object" &&
+    data !== null &&
+    "name" in data &&
+    "email" in data &&
+    "password" in data &&
+    typeof (data as any).name === "string" &&
+    typeof (data as any).email === "string" &&
+    typeof (data as any).password === "string"
+  ) {
+    return data as Account;
+  }
+  return null;
+}
