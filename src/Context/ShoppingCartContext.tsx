@@ -11,15 +11,14 @@ export const initializeLocalStorage = (): { account: Record<string, unknown>; si
   let parsedAccount: Record<string, unknown>;
   let parsedSignout: boolean;
 
-  if (!accountInLocalStorage) {
-    localStorage.setItem('account', JSON.stringify({}));
-    parsedAccount = {};
-  } else {
+  if (accountInLocalStorage) {
     try {
       parsedAccount = JSON.parse(accountInLocalStorage);
     } catch {
       parsedAccount = {};
     }
+  } else {
+    parsedAccount = {};
   }
 
   if (!signOutInLocalStorage) {

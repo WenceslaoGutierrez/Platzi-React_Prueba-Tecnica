@@ -24,7 +24,14 @@ function SignIn() {
   const noAccountInLocalState = context.account ? Object.keys(context.account).length === 0 :true;
   const userHasAccount = !noAccountInLocalStorage || !noAccountInLocalState;
 
-  const createAccount = () =>{
+  const handleSignIn = (): void => {
+    const stringifiedSignOut = JSON.stringify(false);
+    localStorage.setItem('sign-out', stringifiedSignOut);
+    context.setSignOut(false);
+    navigate('/');
+  }
+
+  const createAccount = () : void =>{
     if(!form.current) return;
     const formData = new FormData(form.current)
     const data = {
@@ -35,7 +42,7 @@ function SignIn() {
 
     localStorage.setItem('account', JSON.stringify(data));
     context.setAccount(data);
-    navigate('/');
+    handleSignIn();
   }
 
   const renderLogin = () :ReactNode =>{
@@ -50,7 +57,7 @@ function SignIn() {
           <span>{typeof parsedAccount.password === 'string' && parsedAccount.password.trim() !== '' ? parsedAccount.password : 'Not registered'}</span>
         </p>
         <Link to={"/"}>
-          <button className='bg-black disabled:bg-black/40 text-white w-full rounded-lg py-3 mt-4 mb-2' disabled={!userHasAccount}>Log In</button>
+          <button className='bg-black disabled:bg-black/40 text-white w-full rounded-lg py-3 mt-4 mb-2' onClick={handleSignIn} disabled={!userHasAccount}>Log In</button>
         </Link>
         <div className='text-center'>
           <a className='font-light text-xs underline underline-offset-4' href="/">Forgot my password</a>
