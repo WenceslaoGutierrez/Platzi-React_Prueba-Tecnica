@@ -12,7 +12,7 @@ const OrdersCard = ({ date, totalPrice, totalProducts }: OrdersCardProps) => {
       <div className="flex justify-between w-full">
         <p className="flex flex-col">
           <span className="font-light">{date.toLocaleDateString("en-US")}</span>
-          <span className="font-light">{totalProducts} artículos</span>
+          <span className="font-light">{totalProducts} Items</span>
         </p>
         <p className="flex items-center gap-2">
           <span className="font-medium text-2xl">${totalPrice}</span>

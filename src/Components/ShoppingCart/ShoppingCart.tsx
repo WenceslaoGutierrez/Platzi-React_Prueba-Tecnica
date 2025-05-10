@@ -3,7 +3,7 @@ import { ShoppingCartContext } from "../../Context/ShoppingCartContext";
 import { ShoppingBagIcon } from '@heroicons/react/24/solid'
 
 
-const ShoppingCart = () =>{
+const ShoppingCart = ():ReactNode =>{
     const context = useContext(ShoppingCartContext);
     
     const openCheckoutSideMenu = ():void =>{

@@ -5,6 +5,8 @@ import { ShoppingCartContext } from "../../Context/ShoppingCartContext";
 import OrderCard from "../OrderCard/OrderCard";
 import { totalPrice } from "../../utils";
 import type { Product, Order } from "../../Types";
+import './styles.css';
+
 
 const CheckoutSideMenu = () => {
   const context = useContext(ShoppingCartContext);

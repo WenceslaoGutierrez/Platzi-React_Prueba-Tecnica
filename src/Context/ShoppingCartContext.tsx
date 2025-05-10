@@ -39,10 +39,24 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
   const [productToShow, setProductToShow] = useState<Product | null>(null);
 
   // Shopping Cart · Products in cart
-  const [cartProducts, setCartProducts] = useState<Product[]>([]);
+  const [cartProducts, setCartProducts] = useState<Product[]>(() => {
+    const storedCart = localStorage.getItem('cartProducts');
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+  }, [cartProducts]);
 
   // Shopping Cart · Orders
-  const [order, setOrder] = useState<Order[]>([]);
+  const [order, setOrder] = useState<Order[]>(() => {
+    const storedOrders = localStorage.getItem('orders');
+    return storedOrders ? JSON.parse(storedOrders) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('orders', JSON.stringify(order));
+  }, [order]);
 
   // Store · All items and filtered items
   const [items, setItems] = useState<Product[] | null>(null);
