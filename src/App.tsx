@@ -1,5 +1,5 @@
 import { BrowserRouter, useRoutes } from 'react-router-dom';
-import { ShoppingCartProvider } from './Context/ShoppingCartContext';
+import { ShoppingCartContext, ShoppingCartProvider } from './Context/ShoppingCartContext';
 import Home from './Pages/Home/Home';
 import MyAccount from './Pages/MyAccount/MyAccount';
 import MyOrder from './Pages/MyOrder/MyOrder';
@@ -8,8 +8,16 @@ import NotFound from './Pages/NotFound/NotFound';
 import SignIn from './Pages/SignIn/SignIn';
 import Navbar from './Components/Navbar/Navbar';
 import CheckoutSideMenu from './Components/CheckoutSideMenu/CheckoutSideMenu';
+import { useContext } from 'react';
+import { getParsedStorageObject, userHasAccountFrom } from './utils';
 
 const AppRoutes = () => {
+  const context = useContext(ShoppingCartContext);
+  const parsedAccount = getParsedStorageObject('account');
+  const parsedSignOut = getParsedStorageObject('sign-out');
+  
+
+
   const routes = useRoutes([
     { path: '/', element: <Home /> },
     { path: '/clothes', element: <Home /> },

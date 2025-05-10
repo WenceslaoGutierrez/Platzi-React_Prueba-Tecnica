@@ -1,39 +1,17 @@
 import { createContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { Product, Order, ShoppingCartContextType } from '../Types/index';
+import { getParsedBoolean, getParsedStorageObject } from '../utils';
 
 export const ShoppingCartContext = createContext({} as ShoppingCartContextType);
 
 export const initializeLocalStorage = (): { account: Record<string, unknown>; signOut: boolean } => {
-  const accountInLocalStorage = localStorage.getItem('account');
-  const signOutInLocalStorage = localStorage.getItem('sign-out');
-
-  let parsedAccount: Record<string, unknown>;
-  let parsedSignout: boolean;
-
-  if (accountInLocalStorage) {
-    try {
-      parsedAccount = JSON.parse(accountInLocalStorage);
-    } catch {
-      parsedAccount = {};
-    }
-  } else {
-    parsedAccount = {};
-  }
-
-  if (!signOutInLocalStorage) {
-    localStorage.setItem('sign-out', JSON.stringify(false));
-    parsedSignout = false;
-  } else {
-    try {
-      parsedSignout = JSON.parse(signOutInLocalStorage);
-    } catch {
-      parsedSignout = false;
-    }
-  }
+  const parsedAccount = getParsedStorageObject('account');
+  const parsedSignout = getParsedBoolean('sign-out');
 
   return { account: parsedAccount, signOut: parsedSignout };
 };
+
 
 export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
 
