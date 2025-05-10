@@ -2,10 +2,14 @@ import { useContext, type ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { ShoppingCartContext } from "../../Context/ShoppingCartContext";
+import { getParsedStorageObject, userHasAccountFrom } from "../../utils";
 
 const Navbar = () => {
   const context = useContext(ShoppingCartContext);
   const activeStyle = "underline underline-offset-4";
+  
+  const parsedAccount = getParsedStorageObject('account');
+  const userHasAccount = userHasAccountFrom(parsedAccount, context.account);
 
   // Sign Out
   const signOut = localStorage.getItem('sign-out');
@@ -19,7 +23,7 @@ const Navbar = () => {
   }
 
   const renderView = (): ReactNode =>{
-    if (isUserSignOut) {
+    if (!isUserSignOut && userHasAccount) {
       return (
         <li>
           <NavLink
@@ -67,7 +71,7 @@ const Navbar = () => {
     <nav className="flex justify-between items-center fixed z-10 top-0 w-full py-5 px-8 text-sm font-light bg-white">
       <ul className="flex items-center gap-3">
         <li className="font-semibold text-lg">
-          <NavLink to="/">Shopi</NavLink>
+          <NavLink to={`${isUserSignOut ? '/sign-in' : '/'}`}>Shopi</NavLink>
         </li>
         <li>
           <NavLink
