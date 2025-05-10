@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { ShoppingCartContext } from "../../Context/ShoppingCartContext";
 import { getParsedStorageObject, userHasAccountFrom } from "../../utils";
+import ShoppingCart from "../ShoppingCart/ShoppingCart";
 
 const Navbar = () => {
   const context = useContext(ShoppingCartContext);
@@ -136,8 +137,7 @@ const Navbar = () => {
       <ul className="flex items-center gap-3">
         {renderView()}
         <li className="flex items-center">
-          <ShoppingBagIcon className="h-6 w-6 text-black" />
-          <span>{context.count}</span>
+            <ShoppingCart/>
         </li>
       </ul>
     </nav>
