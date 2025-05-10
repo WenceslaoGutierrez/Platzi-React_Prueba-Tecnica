@@ -8,23 +8,27 @@ import NotFound from './Pages/NotFound/NotFound';
 import SignIn from './Pages/SignIn/SignIn';
 import Navbar from './Components/Navbar/Navbar';
 import CheckoutSideMenu from './Components/CheckoutSideMenu/CheckoutSideMenu';
-import { useContext } from 'react';
+import { useContext, type JSX } from 'react';
 import { getParsedStorageObject, userHasAccountFrom } from './utils';
 
 const AppRoutes = () => {
   const context = useContext(ShoppingCartContext);
   const parsedAccount = getParsedStorageObject('account');
   const parsedSignOut = getParsedStorageObject('sign-out');
-  
+  const userHasAccount = userHasAccountFrom(parsedAccount, context.account);
+  const isUserSignOut = context.signOut || parsedSignOut;
 
+  const protectRoute = (element: JSX.Element) => {
+    return userHasAccount && !isUserSignOut ? element : <SignIn />;
+  };
 
   const routes = useRoutes([
-    { path: '/', element: <Home /> },
-    { path: '/clothes', element: <Home /> },
-    { path: '/electronics', element: <Home /> },
-    { path: '/men', element: <Home /> },
-    { path: '/women', element: <Home /> },
-    { path: '/jewelery', element: <Home /> },
+    { path: '/', element: protectRoute(<Home />) },
+    { path: '/clothes', element: protectRoute(<Home />) },
+    { path: '/electronics', element: protectRoute(<Home />) },
+    { path: '/men', element: protectRoute(<Home />) },
+    { path: '/women', element: protectRoute(<Home />) },
+    { path: '/jewelery', element: protectRoute(<Home />) },
     { path: '/my-account', element: <MyAccount /> },
     { path: '/my-order', element: <MyOrder /> },
     { path: '/my-orders', element: <MyOrders /> },

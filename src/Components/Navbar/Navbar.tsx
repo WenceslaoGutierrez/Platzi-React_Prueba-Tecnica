@@ -10,6 +10,8 @@ const Navbar = () => {
   
   const parsedAccount = getParsedStorageObject('account');
   const userHasAccount = userHasAccountFrom(parsedAccount, context.account);
+  const userEmail = typeof parsedAccount.email === 'string' ? parsedAccount.email : 'Unknown';
+
 
   // Sign Out
   const signOut = localStorage.getItem('sign-out');
@@ -23,7 +25,7 @@ const Navbar = () => {
   }
 
   const renderView = (): ReactNode =>{
-    if (!isUserSignOut && userHasAccount) {
+    if (isUserSignOut || !userHasAccount) {
       return (
         <li>
           <NavLink
@@ -38,7 +40,7 @@ const Navbar = () => {
       return (
         <>
           <li className='text-black/60'>
-          wences@example.com
+            {userEmail}
           </li>
           <li>
             <NavLink
