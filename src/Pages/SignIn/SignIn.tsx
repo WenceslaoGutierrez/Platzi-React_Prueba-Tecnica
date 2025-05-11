@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout";
-import { useContext, useRef, useState, type ReactNode } from "react";
+import { useContext, useState, type ReactNode } from "react";
 import { ShoppingCartContext } from "../../Context/ShoppingCartContext";
 import { getParsedStorageObject, getValidAccount, userHasAccountFrom } from "../../utils";
 import type { Account } from "../../Types";
