@@ -16,6 +16,13 @@ export type Order = {
     totalPrice: number;
 };
 
+// Account
+export type Account = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 // ShoppingCart Context
 export type ShoppingCartContextType = {
     account: Record<string, unknown>;
